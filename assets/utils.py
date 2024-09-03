@@ -16,6 +16,7 @@ def read_metadado(meta_path):
         "tipos_originais" : dict(zip(list(meta["cols_originais"]),list(meta["tipo_original"]))),
         "tipos_formatted" : dict(zip(list(meta["cols_renamed"]),list(meta["tipo_formatted"]))),
         "cols_chaves" : list(meta.loc[meta["key"] == 1]["cols_originais"]),
+        "cols_key" : list(meta.loc[meta["key"] == 1]["cols_renamed"]),
         "null_tolerance" : dict(zip(list(meta["cols_renamed"]), list(meta["raw_null_tolerance"]))),
         "std_str" : list(meta.loc[meta["std_str"] == 1]["cols_renamed"]),
         "corrige_hr" : list(meta.loc[meta["corrige_hr"] == 1]["cols_renamed"])
@@ -98,14 +99,16 @@ def keys_check(df, cols_chaves):
     '''
     Função de validação de colunas chaves
     INPUT: Pandas DataFrame, dicionário de colunas chaves
-    OUTPUT: Validação das colunas.
+    OUTPUT: Validação das colunas ou trava o pipeline por falha
     '''
-    #colocar log info
+    print(cols_chaves)
     for col in cols_chaves:
-        if True:
-            pass
+        if df[col].notnull().sum() == len(df):
+            logger.info(f"{col} esta completa.")
         else:
-            pass
+            logger.error(f"{col} não esta completa, revise seu df")
+
+
 
 # Funções auxiliares -------------------------------------------
 
